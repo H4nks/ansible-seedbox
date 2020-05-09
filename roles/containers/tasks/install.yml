@@ -18,6 +18,7 @@
   include_tasks: "{{ item }}.yml"
   with_items:
     - traefik
+    # - meetin
     - portainer
     - plex
     - rtorrent

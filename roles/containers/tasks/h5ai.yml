@@ -6,7 +6,9 @@
     state: started
     hostname: h5ai
     pull: yes
-    restart_policy: unless-stopped
+    restart_policy: on-failure
+    restart_retries: 2
+    cpu_shares: 128
     volumes:
       - "{{ exposed_folder }}:/var/www/Others:ro"
       - "{{ plex_movies }}:/var/www/Movies:ro"

@@ -6,12 +6,13 @@
 - name: TheLounge
   docker_container:
     name: thelounge
-    image: thelounge/thelounge:3.0.1-alpine
+    image: thelounge/thelounge:alpine
     state: started
     hostname: thelounge
     pull: yes
     restart_policy: unless-stopped
     purge_networks: yes
+    cpu_shares: 128
     volumes:
       - /var/opt/thelounge:/var/opt/thelounge
       - /etc/localtime:/etc/localtime:ro

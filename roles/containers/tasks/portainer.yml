@@ -8,6 +8,7 @@
     pull: yes
     restart_policy: on-failure
     restart_retries: 2
+    cpu_shares: 128
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/var/portainer:/data"

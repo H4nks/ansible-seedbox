@@ -6,7 +6,9 @@
     state: started
     hostname: plex
     pull: yes
-    restart_policy: unless-stopped
+    restart_policy: on-failure
+    restart_retries: 2
+    cpu_shares: 1024
     env:
       PLEX_UID: "{{ plex_uid }}"
       PLEX_GID: "{{ plex_uid }}"
@@ -18,8 +20,8 @@
       - "{{ plex_transcode }}:/transcode"
       - "{{ plex_config }}:/config"
       - "/etc/localtime:/etc/localtime:ro"
-    ports:
-      - "32400:32400"
+    # ports:
+    #   - "32400:32400"
     networks:
       - name: p2p
     labels:

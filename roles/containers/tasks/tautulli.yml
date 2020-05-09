@@ -9,6 +9,7 @@
     restart_policy: on-failure
     restart_retries: 2
     purge_networks: yes
+    cpu_shares: 128
     volumes:
       - "/etc/tautulli:/config"
       - "{{ plex_config }}/Library/Application Support/Plex Media Server/Logs:/plex_logs:ro"

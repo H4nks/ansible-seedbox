@@ -8,6 +8,7 @@
     pull: yes
     restart_policy: on-failure
     restart_retries: 2
+    cpu_shares: 128
     volumes:
       - "/etc/sonarr:/config"
       - "{{ medias_root }}:/p2p"

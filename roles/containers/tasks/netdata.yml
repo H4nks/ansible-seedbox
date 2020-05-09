@@ -8,6 +8,7 @@
     hostname: netdata
     restart_policy: on-failure
     restart_retries: 2
+    cpu_shares: 128
     capabilities: "SYS_PTRACE"
     env:
       PUID: "{{ netdata_uid }}"
