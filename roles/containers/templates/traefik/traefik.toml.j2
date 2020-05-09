@@ -1,5 +1,5 @@
 debug = false
-logLevel = "ERROR"
+logLevel = "INFO"
 defaultEntryPoints = ["https","http"]
 
 [entryPoints]
@@ -14,15 +14,14 @@ defaultEntryPoints = ["https","http"]
   [entryPoints.https.tls]
 
 [acme]
+  acmeLogging = true
   email = "{{ user_mail }}"
   storage = "acme.json"
   onHostRule = true
   entryPoint = "https"
-  [acme.httpChallenge]
-    entryPoint = "http"
 
   [acme.dnsChallenge]
-    provider = "ovh"
+    provider = "cloudflare"
 
   [[acme.domains]]
     main = "*.{{ domain }}"
@@ -36,3 +35,6 @@ defaultEntryPoints = ["https","http"]
   endpoint = "unix:///var/run/docker.sock"
   domain = "{{ domain }}"
   watch = true
+
+[file]
+watch = true

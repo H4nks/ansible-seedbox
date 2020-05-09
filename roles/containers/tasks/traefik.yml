@@ -42,7 +42,5 @@
       traefik.port: "8080"
       traefik.enable: "true"
     env:
-      OVH_ENDPOINT: "{{ ovh_endpoint }}"
-      OVH_APPLICATION_KEY: "{{ ovh_application_key }}"
-      OVH_APPLICATION_SECRET: "{{ ovh_application_secret }}"
-      OVH_CONSUMER_KEY: "{{ ovh_consumer_key }}"
+      CF_API_EMAIL: "{{ user_mail }}"
+      CF_API_KEY: "{{ cf_api_key }}"
