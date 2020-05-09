@@ -99,6 +99,7 @@ instances:
       - tmpfs$
       - /var/lib/docker/(containers|overlay2)/.*
       - /run/docker/netns.*
+      - /proc/.*/fd*
     #   - /proc/sys/fs/binfmt_misc
     #   - /dev/sde
     #   - [FJ]:
