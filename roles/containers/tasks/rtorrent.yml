@@ -4,7 +4,7 @@
     state: directory
   with_items:
     - /etc/rtorrent
-    - /etc/rutorrent
+    - /var/rtorrent
     - /usr/share/rutorrent
   loop_control:
     loop_var: path
@@ -22,7 +22,7 @@
 - name: Rtorrent
   docker_container:
     name: rtorrent
-    image: xataz/rtorrent-rutorrent:latest
+    image: mondedie/rutorrent:latest
     state: started
     hostname: rtorrent
     pull: yes
@@ -36,10 +36,7 @@
       - 45000:45000
       - 45000:45000/udp
     volumes:
-      - "{{ rtorrent_config }}:/config/rtorrent"
-      - "/etc/rutorrent:/config/rutorrent/conf"
-      - "/etc/rutorrent/custom_plugins:/config/custom_plugins"
-      - "/etc/rutorrent/custom_themes:/config/custom_themes"
+      - "{{ rtorrent_config }}:/config"
       - "/usr/share/rutorrent:/config/rutorrent/share"
       - "/var/rtorrent/sessions:/data/.session"
       - "{{ rtorrent_downloads }}:/p2p/downloads"
