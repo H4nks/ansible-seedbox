@@ -20,7 +20,17 @@
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:tautulli.{{ domain }}"
-      traefik.basic.port: "8181"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.tautulli.loadbalancer.server.port: "8181"
+      # http router
+      traefik.http.routers.tautulli-http.rule: "Host(`tautulli.{{ domain }}`)"
+      traefik.http.routers.tautulli-http.entrypoints: "web"
+      traefik.http.routers.tautulli-http.service: "tautulli"
+      # https router
+      traefik.http.routers.tautulli-https.rule: "Host(`tautulli.{{ domain }}`)"
+      traefik.http.routers.tautulli-https.entrypoints: "websecure"
+      traefik.http.routers.tautulli-https.service: "tautulli"
+      traefik.http.routers.tautulli-https.tls: "true"
+      traefik.http.routers.tautulli-https.tls.certresolver: "cloudflare"

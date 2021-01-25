@@ -20,12 +20,24 @@
       - "{{ plex_transcode }}:/transcode"
       - "{{ plex_config }}:/config"
       - "/etc/localtime:/etc/localtime:ro"
-    # ports:
-    #   - "32400:32400"
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:plex.{{ domain }}"
-      traefik.basic.port: "32400"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.plex.loadbalancer.server.port: "32400"
+      # http router
+      traefik.http.routers.plex-http.rule: "Host(`plex.{{ domain }}`)"
+      traefik.http.routers.plex-http.entrypoints: "web"
+      traefik.http.routers.plex-http.service: "plex"
+      # https router
+      traefik.http.routers.plex-https.rule: "Host(`plex.{{ domain }}`)"
+      traefik.http.routers.plex-https.entrypoints: "websecure"
+      traefik.http.routers.plex-https.service: "plex"
+      traefik.http.routers.plex-https.tls: "true"
+      traefik.http.routers.plex-https.tls.certresolver: "cloudflare"
+      # tcp routeur for phone home over TLS
+      traefik.tcp.routers.plex.rule: "HostSNI(`plex-tls.{{ domain }}`)"
+      traefik.tcp.routers.plex.entrypoints: "plex"
+      traefik.tcp.routers.plex.service: "plex"

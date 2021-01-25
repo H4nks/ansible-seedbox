@@ -25,7 +25,7 @@
 - name: Create the traefik container
   docker_container:
     name: traefik
-    image: traefik:maroilles
+    image: traefik:2.4
     restart_policy: unless-stopped
     networks:
       - name: p2p

@@ -23,7 +23,17 @@
           - sonarr:sonarr
           - radarr:radarr
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:ombi.{{ domain }}"
-      traefik.basic.port: "3579"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.ombi.loadbalancer.server.port: "3579"
+      # http router
+      traefik.http.routers.ombi-http.rule: "Host(`ombi.{{ domain }}`)"
+      traefik.http.routers.ombi-http.entrypoints: "web"
+      traefik.http.routers.ombi-http.service: "ombi"
+      # https router
+      traefik.http.routers.ombi-https.rule: "Host(`ombi.{{ domain }}`)"
+      traefik.http.routers.ombi-https.entrypoints: "websecure"
+      traefik.http.routers.ombi-https.service: "ombi"
+      traefik.http.routers.ombi-https.tls: "true"
+      traefik.http.routers.ombi-https.tls.certresolver: "cloudflare"

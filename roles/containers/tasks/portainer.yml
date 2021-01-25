@@ -16,8 +16,17 @@
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:portainer.{{ domain }}"
-      traefik.basic.port: "9000"
-      traefik.frontend.headers.browserXSSFilter: "true"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.portainer.loadbalancer.server.port: "9000"
+      # http router
+      traefik.http.routers.portainer-http.rule: "Host(`portainer.{{ domain }}`)"
+      traefik.http.routers.portainer-http.entrypoints: "web"
+      traefik.http.routers.portainer-http.service: "portainer"
+      # https router
+      traefik.http.routers.portainer-https.rule: "Host(`portainer.{{ domain }}`)"
+      traefik.http.routers.portainer-https.entrypoints: "websecure"
+      traefik.http.routers.portainer-https.service: "portainer"
+      traefik.http.routers.portainer-https.tls: "true"
+      traefik.http.routers.portainer-https.tls.certresolver: "cloudflare"

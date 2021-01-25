@@ -23,7 +23,17 @@
           - rtorrent:rtorrent
           - jackett:jackett
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:radarr.{{ domain }}"
-      traefik.basic.port: "7878"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.radarr.loadbalancer.server.port: "7878"
+      # http router
+      traefik.http.routers.radarr-http.rule: "Host(`radarr.{{ domain }}`)"
+      traefik.http.routers.radarr-http.entrypoints: "web"
+      traefik.http.routers.radarr-http.service: "radarr"
+      # https router
+      traefik.http.routers.radarr-https.rule: "Host(`radarr.{{ domain }}`)"
+      traefik.http.routers.radarr-https.entrypoints: "websecure"
+      traefik.http.routers.radarr-https.service: "radarr"
+      traefik.http.routers.radarr-https.tls: "true"
+      traefik.http.routers.radarr-https.tls.certresolver: "cloudflare"

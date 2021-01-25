@@ -18,8 +18,21 @@
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:files.{{ domain }}"
-      traefik.basic.port: "8080"
-      traefik.frontend.auth.basic.users: "{{ files_basicauth_user }}:{{ files_basicauth_password | password_hash('blowfish') }}"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.h5ai.loadbalancer.server.port: "8080"
+      # basicauth middleware
+      traefik.http.middlewares.h5ai-auth.basicauth.users: "{{ files_basicauth_user }}:{{ files_basicauth_password | password_hash('blowfish') }}"
+      # http router
+      traefik.http.routers.h5ai-http.rule: "Host(`files.{{ domain }}`)"
+      traefik.http.routers.h5ai-http.entrypoints: "web"
+      traefik.http.routers.h5ai-http.service: "h5ai"
+      traefik.http.routers.h5ai-http.middlewares: "h5ai-auth@docker"
+      # https router
+      traefik.http.routers.h5ai-https.rule: "Host(`files.{{ domain }}`)"
+      traefik.http.routers.h5ai-https.entrypoints: "websecure"
+      traefik.http.routers.h5ai-https.service: "h5ai"
+      traefik.http.routers.h5ai-https.middlewares: "h5ai-auth@docker"
+      traefik.http.routers.h5ai-https.tls: "true"
+      traefik.http.routers.h5ai-https.tls.certresolver: "cloudflare"

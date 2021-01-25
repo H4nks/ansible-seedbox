@@ -44,8 +44,21 @@
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:rtorrent.{{ domain }}"
-      traefik.frontend.auth.basic.users: "{{ rutorrent_basicauth_user }}:{{ rutorrent_basicauth_password | password_hash('blowfish') }}"
-      traefik.basic.port: "8080"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.rtorrent.loadbalancer.server.port: "8080"
+      # basicauth middleware
+      traefik.http.middlewares.rtorrent-auth.basicauth.users: "{{ rutorrent_basicauth_user }}:{{ rutorrent_basicauth_password | password_hash('blowfish') }}"
+      # http router
+      traefik.http.routers.rtorrent-http.rule: "Host(`rtorrent.{{ domain }}`)"
+      traefik.http.routers.rtorrent-http.entrypoints: "web"
+      traefik.http.routers.rtorrent-http.service: "rtorrent"
+      traefik.http.routers.rtorrent-http.middlewares: "rtorrent-auth@docker"
+      # https router
+      traefik.http.routers.rtorrent-https.rule: "Host(`rtorrent.{{ domain }}`)"
+      traefik.http.routers.rtorrent-https.entrypoints: "websecure"
+      traefik.http.routers.rtorrent-https.service: "rtorrent"
+      traefik.http.routers.rtorrent-https.middlewares: "rtorrent-auth@docker"
+      traefik.http.routers.rtorrent-https.tls: "true"
+      traefik.http.routers.rtorrent-https.tls.certresolver: "cloudflare"

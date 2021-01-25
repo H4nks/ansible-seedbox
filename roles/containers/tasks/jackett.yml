@@ -20,7 +20,17 @@
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:jackett.{{ domain }}"
-      traefik.basic.port: "9117"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.jackett.loadbalancer.server.port: "9117"
+      # http router
+      traefik.http.routers.jackett-http.rule: "Host(`jackett.{{ domain }}`)"
+      traefik.http.routers.jackett-http.entrypoints: "web"
+      traefik.http.routers.jackett-http.service: "jackett"
+      # https router
+      traefik.http.routers.jackett-https.rule: "Host(`jackett.{{ domain }}`)"
+      traefik.http.routers.jackett-https.entrypoints: "websecure"
+      traefik.http.routers.jackett-https.service: "jackett"
+      traefik.http.routers.jackett-https.tls: "true"
+      traefik.http.routers.jackett-https.tls.certresolver: "cloudflare"

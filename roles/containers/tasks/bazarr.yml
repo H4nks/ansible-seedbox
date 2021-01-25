@@ -24,7 +24,17 @@
           - sonarr:sonarr
           - radarr:radarr
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:bazarr.{{ domain }}"
-      traefik.basic.port: "6767"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.bazarr.loadbalancer.server.port: "6767"
+      # http router
+      traefik.http.routers.bazarr-http.rule: "Host(`bazarr.{{ domain }}`)"
+      traefik.http.routers.bazarr-http.entrypoints: "web"
+      traefik.http.routers.bazarr-http.service: "bazarr"
+      # https router
+      traefik.http.routers.bazarr-https.rule: "Host(`bazarr.{{ domain }}`)"
+      traefik.http.routers.bazarr-https.entrypoints: "websecure"
+      traefik.http.routers.bazarr-https.service: "bazarr"
+      traefik.http.routers.bazarr-https.tls: "true"
+      traefik.http.routers.bazarr-https.tls.certresolver: "cloudflare"

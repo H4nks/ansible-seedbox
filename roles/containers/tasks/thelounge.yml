@@ -19,7 +19,17 @@
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:thelounge.{{ domain }}"
-      traefik.basic.port: "9000"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.thelounge.loadbalancer.server.port: "9000"
+      # http router
+      traefik.http.routers.thelounge-http.rule: "Host(`thelounge.{{ domain }}`)"
+      traefik.http.routers.thelounge-http.entrypoints: "web"
+      traefik.http.routers.thelounge-http.service: "thelounge"
+      # https router
+      traefik.http.routers.thelounge-https.rule: "Host(`thelounge.{{ domain }}`)"
+      traefik.http.routers.thelounge-https.entrypoints: "websecure"
+      traefik.http.routers.thelounge-https.service: "thelounge"
+      traefik.http.routers.thelounge-https.tls: "true"
+      traefik.http.routers.thelounge-https.tls.certresolver: "cloudflare"

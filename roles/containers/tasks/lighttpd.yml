@@ -32,7 +32,17 @@
     networks:
       - name: p2p
     labels:
-      traefik.docker.network: "p2p"
       traefik.enable: "true"
-      traefik.basic.frontend.rule: "Host:{{ domain }}"
-      traefik.basic.port: "8080"
+      traefik.docker.network: "p2p"
+      # service
+      traefik.http.services.lighttpd.loadbalancer.server.port: "8080"
+      # http router
+      traefik.http.routers.lighttpd-http.rule: "Host(`{{ domain }}`) || Host(`www.{{ domain }}`)"
+      traefik.http.routers.lighttpd-http.entrypoints: "web"
+      traefik.http.routers.lighttpd-http.service: "lighttpd"
+      # https router
+      traefik.http.routers.lighttpd-https.rule: "Host(`{{ domain }}`) || Host(`www.{{ domain }}`)"
+      traefik.http.routers.lighttpd-https.entrypoints: "websecure"
+      traefik.http.routers.lighttpd-https.service: "lighttpd"
+      traefik.http.routers.lighttpd-https.tls: "true"
+      traefik.http.routers.lighttpd-https.tls.certresolver: "cloudflare"
