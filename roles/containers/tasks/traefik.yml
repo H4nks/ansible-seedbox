@@ -32,15 +32,11 @@
     ports:
       - "80:80"
       - "443:443"
+      - "32400:32400"
     volumes:
       - "{{ traefik_dir }}/traefik.toml:/etc/traefik/traefik.toml"
       - "{{ traefik_dir }}/acme.json:/acme.json"
       - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      traefik.frontend.rule: "Host:traefik.{{ domain }}"
-      traefik.docker.network: "p2p"
-      traefik.port: "8080"
-      traefik.enable: "true"
     env:
       CF_API_EMAIL: "{{ user_mail }}"
       CF_API_KEY: "{{ cf_api_key }}"

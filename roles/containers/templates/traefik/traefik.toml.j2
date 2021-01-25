@@ -1,40 +1,51 @@
-debug = false
-logLevel = "INFO"
-defaultEntryPoints = ["https","http"]
+[global]
+  checkNewVersion = true
+  sendAnonymousUsage = false
 
 [entryPoints]
-  [entryPoints.http]
+  [entryPoints.web]
     address = ":80"
-    compress = true
-    [entryPoints.http.redirect]
-    entryPoint = "https"
-  [entryPoints.https]
+
+    [entryPoints.web.http]
+    [entryPoints.web.http.redirections]
+      [entryPoints.web.http.redirections.entryPoint]
+        to = "websecure"
+        scheme = "https"
+
+  [entryPoints.websecure]
     address = ":443"
-    compress = true
-  [entryPoints.https.tls]
 
-[acme]
-  acmeLogging = true
-  email = "{{ user_mail }}"
-  storage = "acme.json"
-  onHostRule = true
-  entryPoint = "https"
-
-  [acme.dnsChallenge]
-    provider = "cloudflare"
-
-  [[acme.domains]]
-    main = "*.{{ domain }}"
-    sans = ["{{ domain }}"]
+  [entryPoints.plex]
+    address = ":32400/tcp"
 
 [api]
-  entryPoint = "traefik"
   dashboard = false
 
-[docker]
-  endpoint = "unix:///var/run/docker.sock"
-  domain = "{{ domain }}"
-  watch = true
+[providers]
+  [providers.docker]
+    endpoint = "unix:///var/run/docker.sock"
+    watch = true
+    exposedByDefault = false
+    swarmMode = false
 
-[file]
-watch = true
+[log]
+  level = "INFO"
+
+[certificatesResolvers]
+  [certificatesResolvers.cloudflare]
+    [certificatesResolvers.cloudflare.acme]
+      email = "{{ user_mail }}"
+      caServer = "https://acme-staging-v02.api.letsencrypt.org/directory" # FIXME
+
+      storage = "acme.json"
+
+      [certificatesResolvers.cloudflare.acme.dnsChallenge]
+      provider = "cloudflare"
+      resolvers = ["1.1.1.1:53"]
+
+# [metrics]
+#   [metrics.datadog]
+#     address = "foobar"
+#     pushInterval = "42s"
+#     addEntryPointsLabels = true
+#     addServicesLabels = true
