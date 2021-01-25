@@ -1,8 +1,8 @@
 ---
-- name: Portainer
-  docker_container:
+- name: Portainer container
+  community.general.docker_container:
     name: portainer
-    image: portainer/portainer:latest
+    image: portainer/portainer-ce:latest
     hostname: portainer
     state: started
     pull: yes
@@ -20,6 +20,4 @@
       traefik.enable: "true"
       traefik.basic.frontend.rule: "Host:portainer.{{ domain }}"
       traefik.basic.port: "9000"
-      # Headers for CORS compliance (not very effective...)
-      traefik.frontend.headers.customResponseHeaders: 'Access-Control-Allow-Origin: *||Access-Control-Allow-Methods: DELETE, POST, GET, OPTIONS||Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type||Access-Control-Max-Age:600'
       traefik.frontend.headers.browserXSSFilter: "true"
